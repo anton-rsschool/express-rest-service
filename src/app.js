@@ -6,7 +6,7 @@ const YAML = require('yamljs');
 const userRouter = require('./resources/users/user.router');
 const taskRouter = require('./resources/tasks/task.router');
 const boardRouter = require('./resources/boards/board.router');
-const { requestLogger } = require('./middlewars/requestLogger');
+const { loggerMiddlewar } = require('./middlewars/loggerMiddlewar');
 const { errorHandler } = require('./middlewars/errorHandler');
 
 const app = express();
@@ -16,7 +16,7 @@ app.use(express.json());
 
 app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
-app.use(requestLogger);
+app.use(loggerMiddlewar);
 
 app.use('/', (req, res, next) => {
   if (req.originalUrl === '/') {
