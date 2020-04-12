@@ -1,3 +1,10 @@
+/* eslint-disable no-unused-vars */
+process.on('uncaughtException', (error, origin) => {
+  console.error(`Error: ${error.message}`);
+  const exit = process.exit;
+  exit(1);
+});
+
 const { PORT } = require('./common/config');
 const app = require('./app');
 
