@@ -2,21 +2,15 @@
 const { logger } = require('../logger/logger');
 
 const errorHandler = (err, req, res, next) => {
+  const status = err.status || 500;
   const log = {
     level: 'error',
-    message: 'Request log',
+    message: 'Response error log',
     timestamp: new Date(),
-    method: req.method,
-    url: req.originalUrl,
-    queryParams: req.query,
-    body: req.body
+    status
   };
   logger.error(log);
-  if (err.status) {
-    res.status(err.status).send();
-  } else {
-    res.status(500).send();
-  }
+  res.status(status).send();
   return;
 };
 

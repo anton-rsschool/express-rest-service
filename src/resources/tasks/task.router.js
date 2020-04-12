@@ -7,15 +7,23 @@ const { createError } = require('../../middlewars/errorHandler');
 
 router
   .route('/')
-  .get(async (req, res) => {
-    const { boardId } = req.params;
-    const tasks = await tasksService.getTasksByBoard(boardId);
-    res.json(tasks.map(Task.toResponse));
+  .get(async (req, res, next) => {
+    try {
+      const { boardId } = req.params;
+      const tasks = await tasksService.getTasksByBoard(boardId);
+      res.json(tasks.map(Task.toResponse));
+    } catch (err) {
+      next(err);
+    }
   })
-  .post(async (req, res) => {
-    const { boardId } = req.params;
-    const task = await tasksService.createTask({ ...req.body, boardId });
-    res.json(Task.toResponse(task));
+  .post(async (req, res, next) => {
+    try {
+      const { boardId } = req.params;
+      const task = await tasksService.createTask({ ...req.body, boardId });
+      res.json(Task.toResponse(task));
+    } catch (err) {
+      next(err);
+    }
   });
 
 router

@@ -6,13 +6,21 @@ const { createError } = require('../../middlewars/errorHandler');
 
 router
   .route('/')
-  .get(async (req, res) => {
-    const boards = await boardsService.getAll();
-    res.json(boards.map(Board.toResponse));
+  .get(async (req, res, next) => {
+    try {
+      const boards = await boardsService.getAll();
+      res.json(boards.map(Board.toResponse));
+    } catch (err) {
+      next(err);
+    }
   })
-  .post(async (req, res) => {
-    const board = await boardsService.createBoard(req.body);
-    res.json(Board.toResponse(board));
+  .post(async (req, res, next) => {
+    try {
+      const board = await boardsService.createBoard(req.body);
+      res.json(Board.toResponse(board));
+    } catch (err) {
+      next(err);
+    }
   });
 
 router

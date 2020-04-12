@@ -1,14 +1,29 @@
-/* eslint-disable no-unused-vars */
-process.on('uncaughtException', (error, origin) => {
-  console.error(`Error: ${error.message}`);
+const { logger } = require('./logger/logger');
+
+process.on('uncaughtException', error => {
+  const log = {
+    level: 'error',
+    message: 'Uncaught exception',
+    stack: error.stack
+  };
+  logger.error(log);
   const exit = process.exit;
-  exit(1);
+  logger.on('finish', () => {
+    exit(1);
+  });
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-  console.error(`Error: ${reason.message}`);
+process.on('unhandledRejection', reason => {
+  const log = {
+    level: 'error',
+    message: 'Unhandled rejection',
+    stack: reason.stack
+  };
+  logger.error(log);
   const exit = process.exit;
-  exit(1);
+  logger.on('finish', () => {
+    exit(1);
+  });
 });
 
 const { PORT } = require('./common/config');
