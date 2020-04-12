@@ -5,6 +5,12 @@ process.on('uncaughtException', (error, origin) => {
   exit(1);
 });
 
+process.on('unhandledRejection', (reason, promise) => {
+  console.error(`Error: ${reason.message}`);
+  const exit = process.exit;
+  exit(1);
+});
+
 const { PORT } = require('./common/config');
 const app = require('./app');
 
