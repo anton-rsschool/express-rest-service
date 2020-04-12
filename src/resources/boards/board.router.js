@@ -1,6 +1,8 @@
+/* eslint-disable callback-return */
 const router = require('express').Router();
 const Board = require('./board.model');
 const boardsService = require('./board.service');
+const { createError } = require('../../middlewars/errorHandler');
 
 router
   .route('/')
@@ -15,31 +17,34 @@ router
 
 router
   .route('/:id')
-  .get(async (req, res) => {
-    const { id } = req.params;
-    const board = await boardsService.getBoard(id);
-    if (board) {
+  .get(async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const board = await boardsService.getBoard(id);
+      if (!board) throw createError(404);
       res.json(Board.toResponse(board));
-    } else {
-      res.status(404).send();
+    } catch (err) {
+      next(err);
     }
   })
-  .put(async (req, res) => {
-    const { id } = req.params;
-    const board = await boardsService.updateBoard(id, req.body);
-    if (board) {
+  .put(async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const board = await boardsService.updateBoard(id, req.body);
+      if (!board) throw createError(404);
       res.json(Board.toResponse(board));
-    } else {
-      res.status(400).send();
+    } catch (err) {
+      next(err);
     }
   })
-  .delete(async (req, res) => {
-    const { id } = req.params;
-    const isDelete = await boardsService.deleteBoard(id, req.body);
-    if (isDelete) {
+  .delete(async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const isDelete = await boardsService.deleteBoard(id, req.body);
+      if (!isDelete) throw createError(404);
       res.status(204).send();
-    } else {
-      res.status(404).send();
+    } catch (err) {
+      next(err);
     }
   });
 

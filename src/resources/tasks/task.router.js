@@ -1,6 +1,9 @@
+/* eslint-disable callback-return */
 const router = require('express').Router({ mergeParams: true });
+
 const Task = require('./task.model');
 const tasksService = require('./task.service');
+const { createError } = require('../../middlewars/errorHandler');
 
 router
   .route('/')
@@ -17,31 +20,34 @@ router
 
 router
   .route('/:id')
-  .get(async (req, res) => {
-    const { id } = req.params;
-    const task = await tasksService.getTask(id);
-    if (task) {
+  .get(async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const task = await tasksService.getTask(id);
+      if (!task) throw createError(404);
       res.json(Task.toResponse(task));
-    } else {
-      res.status(404).send();
+    } catch (err) {
+      next(err);
     }
   })
-  .put(async (req, res) => {
-    const { boardId, id } = req.params;
-    const task = await tasksService.updateTask(boardId, id, req.body);
-    if (task) {
+  .put(async (req, res, next) => {
+    try {
+      const { boardId, id } = req.params;
+      const task = await tasksService.updateTask(boardId, id, req.body);
+      if (!task) throw createError(404);
       res.json(Task.toResponse(task));
-    } else {
-      res.status(404).send();
+    } catch (err) {
+      next(err);
     }
   })
-  .delete(async (req, res) => {
-    const { id } = req.params;
-    const isDelete = await tasksService.deleteTask(id);
-    if (isDelete) {
+  .delete(async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const isDelete = await tasksService.deleteTask(id);
+      if (!isDelete) throw createError(404);
       res.status(204).send();
-    } else {
-      res.status(404).send();
+    } catch (err) {
+      next(err);
     }
   });
 

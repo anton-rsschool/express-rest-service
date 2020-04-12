@@ -2,6 +2,7 @@ const { createLogger, format, transports } = require('winston');
 
 const logger = createLogger({
   level: 'silly',
+  // Пробелы в начале строки
   format: format.combine(format.colorize(), format.cli()),
   transports: [
     new transports.File({

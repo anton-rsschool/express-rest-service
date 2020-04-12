@@ -1,6 +1,9 @@
+/* eslint-disable callback-return */
 const router = require('express').Router();
+
 const User = require('./user.model');
 const usersService = require('./user.service');
+const { createError } = require('../../middlewars/errorHandler');
 
 router
   .route('/')
@@ -15,31 +18,34 @@ router
 
 router
   .route('/:id')
-  .get(async (req, res) => {
-    const { id } = req.params;
-    const user = await usersService.getUser(id);
-    if (user) {
+  .get(async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const user = await usersService.getUser(id);
+      if (!user) throw createError(404);
       res.json(User.toResponse(user));
-    } else {
-      res.status(404).send();
+    } catch (err) {
+      next(err);
     }
   })
-  .put(async (req, res) => {
-    const { id } = req.params;
-    const user = await usersService.updateUser(id, req.body);
-    if (user) {
+  .put(async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const user = await usersService.updateUser(id, req.body);
+      if (!user) throw createError(404);
       res.json(User.toResponse(user));
-    } else {
-      res.status(400).send();
+    } catch (err) {
+      next(err);
     }
   })
-  .delete(async (req, res) => {
-    const { id } = req.params;
-    const isDelete = await usersService.deleteUser(id);
-    if (isDelete) {
+  .delete(async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const isDelete = await usersService.deleteUser(id);
+      if (!isDelete) throw createError(404);
       res.status(204).send();
-    } else {
-      res.status(404).send();
+    } catch (err) {
+      next(err);
     }
   });
 
