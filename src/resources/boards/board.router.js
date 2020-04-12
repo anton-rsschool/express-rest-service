@@ -29,7 +29,7 @@ router
     try {
       const { id } = req.params;
       const board = await boardsService.getBoard(id);
-      if (!board) throw createError(404);
+      if (!board) return next(createError(404));
       res.json(Board.toResponse(board));
     } catch (err) {
       next(err);
@@ -39,7 +39,7 @@ router
     try {
       const { id } = req.params;
       const board = await boardsService.updateBoard(id, req.body);
-      if (!board) throw createError(404);
+      if (!board) return next(createError(404));
       res.json(Board.toResponse(board));
     } catch (err) {
       next(err);
@@ -49,7 +49,7 @@ router
     try {
       const { id } = req.params;
       const isDelete = await boardsService.deleteBoard(id, req.body);
-      if (!isDelete) throw createError(404);
+      if (!isDelete) return next(createError(404));
       res.status(204).send();
     } catch (err) {
       next(err);

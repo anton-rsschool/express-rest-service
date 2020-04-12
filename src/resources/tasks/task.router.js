@@ -32,7 +32,7 @@ router
     try {
       const { id } = req.params;
       const task = await tasksService.getTask(id);
-      if (!task) throw createError(404);
+      if (!task) return next(createError(404));
       res.json(Task.toResponse(task));
     } catch (err) {
       next(err);
@@ -42,7 +42,7 @@ router
     try {
       const { boardId, id } = req.params;
       const task = await tasksService.updateTask(boardId, id, req.body);
-      if (!task) throw createError(404);
+      if (!task) return next(createError(404));
       res.json(Task.toResponse(task));
     } catch (err) {
       next(err);
@@ -52,7 +52,7 @@ router
     try {
       const { id } = req.params;
       const isDelete = await tasksService.deleteTask(id);
-      if (!isDelete) throw createError(404);
+      if (!isDelete) return next(createError(404));
       res.status(204).send();
     } catch (err) {
       next(err);

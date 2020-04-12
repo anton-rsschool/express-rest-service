@@ -30,7 +30,7 @@ router
     try {
       const { id } = req.params;
       const user = await usersService.getUser(id);
-      if (!user) throw createError(404);
+      if (!user) return next(createError(404));
       res.json(User.toResponse(user));
     } catch (err) {
       next(err);
@@ -40,7 +40,7 @@ router
     try {
       const { id } = req.params;
       const user = await usersService.updateUser(id, req.body);
-      if (!user) throw createError(404);
+      if (!user) return next(createError(404));
       res.json(User.toResponse(user));
     } catch (err) {
       next(err);
@@ -50,7 +50,7 @@ router
     try {
       const { id } = req.params;
       const isDelete = await usersService.deleteUser(id);
-      if (!isDelete) throw createError(404);
+      if (!isDelete) return next(createError(404));
       res.status(204).send();
     } catch (err) {
       next(err);
