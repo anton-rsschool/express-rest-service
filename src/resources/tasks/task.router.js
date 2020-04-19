@@ -52,7 +52,7 @@ router
     try {
       const { id } = req.params;
       const isDelete = await tasksService.deleteTask(id);
-      if (!isDelete) return next(createError(404));
+      if (!isDelete.deletedCount) return next(createError(404));
       res.status(204).send();
     } catch (err) {
       next(err);
