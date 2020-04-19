@@ -49,7 +49,7 @@ router
     try {
       const { id } = req.params;
       const isDelete = await boardsService.deleteBoard(id, req.body);
-      if (!isDelete) return next(createError(404));
+      if (!isDelete.deletedCount) return next(createError(404));
       res.status(204).send();
     } catch (err) {
       next(err);
