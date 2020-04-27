@@ -9,6 +9,7 @@ const taskRouter = require('./resources/tasks/task.router');
 const boardRouter = require('./resources/boards/board.router');
 const { loggerMiddlewar } = require('./middlewars/loggerMiddlewar');
 const { errorHandler } = require('./middlewars/errorHandler');
+const { checkTokenExcept } = require('./middlewars/authorizationMiddlewar');
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
@@ -18,6 +19,8 @@ app.use(express.json());
 app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use(loggerMiddlewar);
+
+app.use(checkTokenExcept(['/', '/doc', '/login']));
 
 app.use('/', (req, res, next) => {
   if (req.originalUrl === '/') {
